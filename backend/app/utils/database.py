@@ -40,7 +40,11 @@ async def get_db():
             await session.close()
 
 # For synchronous operations if needed (e.g., training scripts)
-sync_engine = create_engine(
-    DATABASE_URL.replace("aiosqlite", "sqlite").replace("+asyncpg", ""),
-    echo=False
-)
+if "aiosqlite" in DATABASE_URL:
+    sync_url = DATABASE_URL.replace("sqlite+aiosqlite", "sqlite")
+elif "asyncpg" in DATABASE_URL:
+    sync_url = DATABASE_URL.replace("postgresql+asyncpg", "postgresql+psycopg2")
+else:
+    sync_url = DATABASE_URL
+
+sync_engine = create_engine(sync_url, echo=False)

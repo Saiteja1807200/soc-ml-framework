@@ -1,5 +1,6 @@
-from sqlalchemy import Column, String, Float, Text
+from sqlalchemy import Column, String, Float, Text, Integer, DateTime
 from .base import Base
+from datetime import datetime
 
 class SecurityAlert(Base):
     __tablename__ = "security_alerts"

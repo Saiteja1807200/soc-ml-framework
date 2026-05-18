@@ -10,7 +10,7 @@ class ActivityPreprocessor:
         self.scaler = None
         self.feature_columns = [
             'session_duration', 'files_accessed', 'unusual_time',
-            'hour_of_day', 'day_of_week', 'risk_contribution'
+            'hour_of_day', 'day_of_week'
         ]
         self.model_dir = os.path.dirname(settings.MODEL_PATH)
         os.makedirs(self.model_dir, exist_ok=True)

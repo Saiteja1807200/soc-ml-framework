@@ -6,7 +6,7 @@ import logging
 
 from .utils.database import engine, Base
 from .utils.config import settings
-from .routes import auth, alerts, analytics
+from .routes import auth, alerts, analytics, ml
 
 # Configure logging
 logging.basicConfig(
@@ -48,6 +48,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(alerts.router, prefix="/api/alerts", tags=["Alerts"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics & Dashboard"])
+app.include_router(ml.router, prefix="/api", tags=["Machine Learning"])
 
 @app.get("/")
 async def root():

@@ -1,6 +1,7 @@
 from pydantic_settings import BaseSettings
 from typing import List
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,9 +23,10 @@ class Settings(BaseSettings):
         "sqlite+aiosqlite:///./soc_ml_framework.db"
     )
     
-    # ML Model Settings
-    MODEL_PATH: str = "backend/app/ml/models/isolation_forest_model.joblib"
-    SCALER_PATH: str = "backend/app/ml/models/scaler.joblib"
+    # ML Model Settings — absolute paths relative to this config file
+    _BASE: Path = Path(__file__).resolve().parent.parent  # → backend/app/
+    MODEL_PATH: str = str(Path(__file__).resolve().parent.parent / "ml" / "models" / "isolation_forest_model.joblib")
+    SCALER_PATH: str = str(Path(__file__).resolve().parent.parent / "ml" / "models" / "scaler.joblib")
     
     # CORS
     ALLOWED_ORIGINS: List[str] = ["*"]  # Change to frontend URL in production

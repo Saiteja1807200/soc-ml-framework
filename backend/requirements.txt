@@ -4,7 +4,9 @@ sqlalchemy[asyncio]
 aiosqlite
 asyncpg          # if using PostgreSQL
 python-dotenv
-pydantic
+pydantic[email]
+pydantic-settings
+python-multipart
 python-jose[cryptography]
 passlib[bcrypt]
 scikit-learn
