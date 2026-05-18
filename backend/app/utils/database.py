@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
@@ -9,27 +8,29 @@ load_dotenv()
 
 # Database Configuration
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
+    "DATABASE_URL",
     "sqlite+aiosqlite:///./soc_ml_framework.db"  # Default to SQLite for easy development
 )
 
-# For PostgreSQL (recommended for production)
+# For PostgreSQL (recommended for production):
 # DATABASE_URL = "postgresql+asyncpg://user:password@localhost/soc_ml_db"
 
 engine = create_async_engine(
-    DATABASE_URL, 
+    DATABASE_URL,
     echo=False,
     future=True,
-    pool_pre_ping=True  # Helps with connection reliability
+    pool_pre_ping=True
 )
 
 AsyncSessionLocal = sessionmaker(
-    engine, 
-    class_=AsyncSession, 
+    engine,
+    class_=AsyncSession,
     expire_on_commit=False
 )
 
-Base = declarative_base()
+# Import the single shared Base (defined in models/base.py)
+from .models.base import Base  # noqa: E402 — imported here to avoid circular imports
+
 
 # Dependency for FastAPI
 async def get_db():

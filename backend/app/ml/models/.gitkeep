@@ -1,0 +1,2 @@
+# Trained model files (.joblib) are saved here at runtime after running train_model.py
+# This directory is tracked by git; the model files themselves are in .gitignore
