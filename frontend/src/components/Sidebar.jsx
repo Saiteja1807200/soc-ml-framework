@@ -1,13 +1,13 @@
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   ShieldAlert,
   BarChart3,
-  Brain,
-  Settings,
   ChevronRight,
   Shield,
+  LogOut,
 } from 'lucide-react';
+import { useAuth } from '../auth/AuthContext';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -17,6 +17,13 @@ const navItems = [
 
 export default function Sidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, signout } = useAuth();
+
+  const handleLogout = () => {
+    signout();
+    navigate('/login');
+  };
 
   return (
     <aside className="sidebar">
@@ -55,6 +62,24 @@ export default function Sidebar() {
 
       {/* Bottom section */}
       <div className="sidebar-footer">
+        {/* User info */}
+        {user && (
+          <div className="sidebar-user">
+            <div className="sidebar-user-avatar">
+              {user.username?.slice(0, 2).toUpperCase() || 'U'}
+            </div>
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-name">{user.username}</div>
+              <div className="sidebar-user-role">SOC Analyst</div>
+            </div>
+          </div>
+        )}
+
+        <button className="sidebar-logout" onClick={handleLogout} id="logout-btn">
+          <LogOut size={16} />
+          Sign Out
+        </button>
+
         <div className="system-status">
           <div className="status-dot live"></div>
           <span>System Online</span>
@@ -175,8 +200,65 @@ export default function Sidebar() {
         }
 
         .sidebar-footer {
-          padding: var(--space-lg);
+          padding: var(--space-md) var(--space-lg) var(--space-lg);
           border-top: 1px solid var(--border-subtle);
+        }
+
+        .sidebar-user {
+          display: flex;
+          align-items: center;
+          gap: var(--space-sm);
+          margin-bottom: var(--space-md);
+          padding-bottom: var(--space-md);
+          border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .sidebar-user-avatar {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: rgba(6, 182, 212, 0.12);
+          color: var(--accent-cyan);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.7rem;
+          font-weight: 700;
+          flex-shrink: 0;
+        }
+
+        .sidebar-user-name {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .sidebar-user-role {
+          font-size: 0.68rem;
+          color: var(--text-muted);
+        }
+
+        .sidebar-logout {
+          display: flex;
+          align-items: center;
+          gap: var(--space-sm);
+          width: 100%;
+          padding: 8px var(--space-md);
+          margin-bottom: var(--space-md);
+          border-radius: var(--radius-sm);
+          background: rgba(239, 68, 68, 0.06);
+          border: 1px solid rgba(239, 68, 68, 0.12);
+          color: var(--accent-red);
+          font-size: 0.78rem;
+          font-weight: 600;
+          font-family: var(--font-sans);
+          cursor: pointer;
+          transition: all var(--transition-fast);
+        }
+
+        .sidebar-logout:hover {
+          background: rgba(239, 68, 68, 0.12);
+          border-color: rgba(239, 68, 68, 0.25);
         }
 
         .system-status {

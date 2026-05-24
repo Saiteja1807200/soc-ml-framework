@@ -18,9 +18,11 @@ env/
 *.db
 *.sqlite3
 
-# ML Models
+# ML Models (ignore by default, but allow the app models dir)
 *.joblib
 *.pkl
+!backend/app/ml/models/*.joblib
+!backend/app/ml/models/*.pkl
 
 # Environment
 .env

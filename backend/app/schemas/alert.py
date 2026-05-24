@@ -12,7 +12,7 @@ class AlertBase(BaseModel):
 class AlertResponse(AlertBase):
     id: int
     status: str
-    ml_confidence: float
+    ml_confidence: Optional[float] = 0.0
     created_at: datetime
     assigned_to: Optional[str] = None
 

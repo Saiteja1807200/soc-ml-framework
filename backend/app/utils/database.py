@@ -2,9 +2,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env from the project root (two levels above this file: utils/ → app/ → backend/ → root)
+_ENV_PATH = Path(__file__).resolve().parents[3] / ".env"
+load_dotenv(dotenv_path=_ENV_PATH)
 
 # Database Configuration
 DATABASE_URL = os.getenv(
@@ -12,24 +15,21 @@ DATABASE_URL = os.getenv(
     "sqlite+aiosqlite:///./soc_ml_framework.db"  # Default to SQLite for easy development
 )
 
-# For PostgreSQL (recommended for production):
-# DATABASE_URL = "postgresql+asyncpg://user:password@localhost/soc_ml_db"
-
 engine = create_async_engine(
     DATABASE_URL,
     echo=False,
     future=True,
-    pool_pre_ping=True
+    pool_pre_ping=True,
 )
 
 AsyncSessionLocal = sessionmaker(
     engine,
     class_=AsyncSession,
-    expire_on_commit=False
+    expire_on_commit=False,
 )
 
 # Import the single shared Base (defined in models/base.py)
-from .models.base import Base  # noqa: E402 — imported here to avoid circular imports
+from ..models.base import Base  # noqa: E402 — imported here to avoid circular imports
 
 
 # Dependency for FastAPI
@@ -39,6 +39,7 @@ async def get_db():
             yield session
         finally:
             await session.close()
+
 
 # For synchronous operations if needed (e.g., training scripts)
 if "aiosqlite" in DATABASE_URL:
